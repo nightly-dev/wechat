@@ -3,7 +3,7 @@ It receive the messages from clients and broadcast to all connections.
 
 #How to build:
 
-cd examples & make
+- cd examples & make
 
 #How to run:
 
