@@ -1,4 +1,4 @@
-This is a sample webpage chat room program. Wesocket is used for the communication and backend is based on mongoose.
+This is a sample webpage chat room program. Websocket is used for the communication and backend is based on mongoose.
 It receives the messages from clients and broadcast to all connections.
 
 #How to build:
