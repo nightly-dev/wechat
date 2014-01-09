@@ -1,0 +1,63 @@
+<html>
+<head>
+<script>
+	var writeToScreen = function(message) {
+        var msgBox = document.getElementById("msgBox");
+    	var orgText = msgBox.value;
+		if (orgText != "")
+			orgText += "\n"
+		msgBox.value = orgText + message;
+		msgBox.scrollTop = msgBox.scrollHeight;
+		return false;	
+	};   
+    
+	window.onload = function wininit() {
+		var url = 'ws://' + window.location.host + '/sock';
+        websocket = new WebSocket(url);
+        
+		websocket.onopen = function(ev) {
+          writeToScreen('CONNECTED to SERVER SUCCEED');
+          var message = "New user join the chat room, please enter your name and begin to chat.";
+          websocket.send(message);
+        };
+        websocket.onclose = function(ev) {
+		  var message = document.getElementById("name").value + " quit the chat room.";
+          writeToScreen(message);
+        };
+        websocket.onmessage = function(ev) {
+          writeToScreen(ev.data);
+        };
+        websocket.onerror = function(ev) {
+          writeToScreen('ERROR: ' + ev.data);
+        };
+	}
+
+  
+    function sendMesg() {
+        var outBox = document.getElementById("outBox");
+        var name = document.getElementById("name");
+
+		if (name.value == "")
+		{
+			alert("Please enter your name.");
+			return false;
+		}        
+		websocket.send(name.value + ": " + outBox.value);
+		//reset outBox
+        outBox.value="";
+        return false;
+	}
+</script>
+</head>
+<body>
+    <textarea id="msgBox" cols="80" rows="30" readonly="true"></textarea>
+    <br/>
+    <textarea id="outBox" cols="60" rows="5"></textarea>
+    <input type="button" id="send" value="Send" onclick="sendMesg()"></input>
+    <br/>
+    <label>Your Name:<input type="text" id="name" size="8"></input></label>
+    <br/>
+    
+    <div id="output"></div>
+</body>
+</html>
