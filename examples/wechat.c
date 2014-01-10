@@ -14,7 +14,7 @@ static int websocket_user_handler(struct mg_connection *conn) {
 
 	if ((conn->wsbits & 0xf) != 0xa)	/*skip ping/pong message*/
 	{
-		mg_websocket_broadcast_message(server, (void *)&buf);
+		mg_websocket_broadcast_message(server, &buf);
 	}
 
 	free(buf);
