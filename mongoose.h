@@ -96,7 +96,7 @@ int mg_parse_header(const char *hdr, const char *var_name, char *buf, size_t);
 // Utility functions
 void *mg_start_thread(void *(*func)(void *), void *param);
 char *mg_md5(char buf[33], ...);
-void mg_websocket_broadcast_message(struct mg_server *server, char *msg); 
+void mg_websocket_broadcast_message(struct mg_server *server, char **msg); 
 
 #ifdef __cplusplus
 }
