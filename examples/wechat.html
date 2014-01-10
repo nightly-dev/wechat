@@ -13,12 +13,19 @@
 	};   
     
 	window.onload = function wininit() {
+		/*check whether the web browser support websocket*/
+		if (window.WebSocket == undefined) {
+			alert("Browser not support websocket.");
+			document.getElementById("outBox").readOnly = "true";
+			return false;
+		}
+
 		var url = 'ws://' + window.location.host + '/sock';
         websocket = new WebSocket(url);
         
 		websocket.onopen = function(ev) {
           writeToScreen('CONNECTED to SERVER SUCCEED');
-          var message = "Server: New user join the chat room, \n"+
+          var message = "SERVER: New user join the chat room, \n"+
 						"  please enter your name and begin to chat.";
           websocket.send(message);
         };
