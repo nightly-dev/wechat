@@ -8,6 +8,7 @@
 			orgText += "\n"
 		msgBox.value = orgText + message;
 		msgBox.scrollTop = msgBox.scrollHeight;
+		msgBox.style.color="blue";
 		return false;	
 	};   
     
@@ -17,7 +18,8 @@
         
 		websocket.onopen = function(ev) {
           writeToScreen('CONNECTED to SERVER SUCCEED');
-          var message = "New user join the chat room, please enter your name and begin to chat.";
+          var message = "Server: New user join the chat room, \n"+
+						"  please enter your name and begin to chat.";
           websocket.send(message);
         };
         websocket.onclose = function(ev) {
@@ -47,12 +49,19 @@
         outBox.value="";
         return false;
 	}
+	
+	function clearMesg() {
+		var msgBox = document.getElementById("msgBox");
+		msgBox.value = "";
+		return false;
+	}
 </script>
 </head>
 <body>
     <textarea id="msgBox" cols="80" rows="30" readonly="true"></textarea>
+    <input type="button" id="clear" value="Clear" onclick="clearMesg()"></input>
     <br/>
-    <textarea id="outBox" cols="60" rows="5"></textarea>
+    <textarea id="outBox" cols="80" rows="5"></textarea>
     <input type="button" id="send" value="Send" onclick="sendMesg()"></input>
     <br/>
     <label>Your Name:<input type="text" id="name" size="8"></input></label>
