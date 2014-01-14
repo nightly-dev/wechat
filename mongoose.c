@@ -3750,13 +3750,14 @@ struct mg_server *mg_create_server(void *server_data) {
 
 /*User defined*/
 void mg_websocket_broadcast_message(struct mg_server *server, char **msg) {
-  struct ll *lp, *tmp;
-  struct connection *conn;
+		struct ll *lp, *tmp;
+		struct connection *conn;
 
-  char *hello = *msg;
-  LINKED_LIST_FOREACH(&server->active_connections, lp, tmp) {
-    conn = LINKED_LIST_ENTRY(lp, struct connection, link);
-	mg_websocket_write(&conn->mg_conn, 1, hello, strlen(hello));
-  }
+		char *hello = *msg;
+		LINKED_LIST_FOREACH(&server->active_connections, lp, tmp) {
+				conn = LINKED_LIST_ENTRY(lp, struct connection, link);
+				if (conn->mg_conn.is_websocket && (conn->flags & CONN_CLOSE) == 0)
+						mg_websocket_write(&conn->mg_conn, 1, hello, strlen(hello));
+		}
 }
 

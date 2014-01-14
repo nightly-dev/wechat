@@ -8,7 +8,7 @@ var writeToScreen = function(message) {
 				orgText += "\n"
 						msgBox.value = orgText + message;
 		msgBox.scrollTop = msgBox.scrollHeight;
-		msgBox.style.color="blue";
+		msgBox.style.color="black";
 		return false;	
 };   
 
@@ -24,6 +24,11 @@ function login() {
 		var url = 'ws://' + window.location.host + '/sock';
 		websocket = new WebSocket(url);
 
+		if (document.getElementById("name").value == "")
+		{
+				alert("Please fill your name.");
+				return false;
+		}
 		document.getElementById("login").disabled = true;
 		document.getElementById("name").readOnly = true;
 
@@ -43,7 +48,6 @@ function login() {
 		websocket.onerror = function(ev) {
 				writeToScreen('ERROR: ' + ev.data);
 		};
-
 		return false;
 }
 
@@ -64,7 +68,17 @@ function sendMesg() {
 
 		if (name.value == "")
 		{
-				alert("Please enter your name.");
+				alert("Please enter your name and login.");
+				return false;
+		}
+		if (!window.websocket)	//not login
+		{
+				alert("Please login first.");
+				return false;
+		}
+		if (outBox.value == "")
+		{
+				alert("No message to send.");
 				return false;
 		}
 		websocket.send(name.value + "[" + myTime + "]" 
@@ -79,15 +93,25 @@ function clearMesg() {
 		msgBox.value = "";
 		return false;
 }
+
+function keyHit(e) {
+		var keyCode = e.which ? e.which : e.keyCode;
+
+		if (e.altKey && (keyCode == 13 || keyCode == 108))
+		{
+				sendMesg();
+		}
+		return false;
+}
 </script>
 </head>
-<body>
-<h1>Welcome to Chat Room</h1>
+<body bgcolor="#f6e3ce" onkeydown="keyHit(event)">
+<h3>Welcome to Chat Room</h3>
 <textarea id="msgBox" cols="80" rows="30" readonly="true"></textarea>
 <input type="button" id="clear" value="Clear" onclick="clearMesg()"></input>
 <br/>
 <textarea id="outBox" cols="80" rows="5"></textarea>
-<input type="button" id="send" value="Send" onclick="sendMesg()"></input>
+<input type="button" id="send" value="Send" title="ALT+ENTER" onclick="sendMesg()"></input>
 <br/>
 <label>Your Name:<input type="text" id="name" size="8"></input></label>
 <input type="button" id="login" value="login" onclick="login()"></input>
