@@ -13,3 +13,6 @@ It receives the messages from clients and broadcast to all connections.
 - You can open more than one connections.
 
 OK, let's chat.
+
+#Screenshot:
+![List of Screenshot](http://github.com/zhuyijing/wechat/raw/master/screenshot/screenshot.png)
