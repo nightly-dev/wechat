@@ -1,122 +1,122 @@
 <html>
-<head>
-<script>
-var writeToScreen = function(message) {
-		var msgBox = document.getElementById("msgBox");
-		var orgText = msgBox.value;
-		if (orgText != "")
-				orgText += "\n"
-						msgBox.value = orgText + message;
-		msgBox.scrollTop = msgBox.scrollHeight;
-		msgBox.style.color="black";
-		return false;	
-};   
+    <head>
+        <script>
+            var writeToScreen = function(message) {
+                var msgBox = document.getElementById("msgBox");
+                var orgText = msgBox.value;
+                if (orgText != "")
+                orgText += "\n"
+                msgBox.value = orgText + message;
+                msgBox.scrollTop = msgBox.scrollHeight;
+                msgBox.style.color="black";
+                return false;	
+            };   
 
-function getMyTime() {
-		var myDate = new Date();
-		var myTime = myDate.getHours() + ":" + myDate.getMinutes() + ":" 
-				+ myDate.getSeconds();
+            function getMyTime() {
+                var myDate = new Date();
+                var myTime = myDate.getHours() + ":" + myDate.getMinutes() + ":" 
+                + myDate.getSeconds();
 
-		return myTime;
-}
+                return myTime;
+            }
 
-function login() {
-		var url = 'ws://' + window.location.host + '/sock';
-		websocket = new WebSocket(url);
+            function login() {
+                var url = 'ws://' + window.location.host + '/sock';
+                websocket = new WebSocket(url);
 
-		if (document.getElementById("name").value == "")
-		{
-				alert("Please fill your name.");
-				return false;
-		}
-		document.getElementById("login").disabled = true;
-		document.getElementById("name").readOnly = true;
+                if (document.getElementById("name").value == "")
+                {
+                    alert("Please fill your name.");
+                    return false;
+                }
+                document.getElementById("login").disabled = true;
+                document.getElementById("name").readOnly = true;
 
-		websocket.onopen = function(ev) {
-				//writeToScreen('CONNECTED to SERVER SUCCEED');
-				var message = "SERVER["+getMyTime()+"]: Welcome "+ document.getElementById("name").value 
-						+ " join the chat room.";
-				websocket.send(message);
-		};
-		websocket.onclose = function(ev) {
-				var message = "SERVER["+getMyTime()+"]: " + document.getElementById("name").value + " quit the chat room.";
-				writeToScreen(message);
-		};
-		websocket.onmessage = function(ev) {
-				writeToScreen(ev.data);
-		};
-		websocket.onerror = function(ev) {
-				writeToScreen('ERROR: ' + ev.data);
-		};
-		return false;
-}
+                websocket.onopen = function(ev) {
+                    //writeToScreen('CONNECTED to SERVER SUCCEED');
+                    var message = "SERVER["+getMyTime()+"]: Welcome "+ document.getElementById("name").value 
+                    + " join the chat room.";
+                    websocket.send(message);
+                };
+                websocket.onclose = function(ev) {
+                    var message = "SERVER["+getMyTime()+"]: " + document.getElementById("name").value + " quit the chat room.";
+                    writeToScreen(message);
+                };
+                websocket.onmessage = function(ev) {
+                    writeToScreen(ev.data);
+                };
+                websocket.onerror = function(ev) {
+                    writeToScreen('ERROR: ' + ev.data);
+                };
+                return false;
+            }
 
-window.onload = function wininit() {
-		/*check whether the web browser support websocket*/
-		if (window.WebSocket == undefined) {
-				alert("Browser not support websocket.");
-				document.getElementById("outBox").readOnly = true;
-				return false;
-		}
-}
+            window.onload = function wininit() {
+                /*check whether the web browser support websocket*/
+                if (window.WebSocket == undefined) {
+                    alert("Browser not support websocket.");
+                    document.getElementById("outBox").readOnly = true;
+                    return false;
+                }
+            }
 
 
-function sendMesg() {
-		var outBox = document.getElementById("outBox");
-		var name = document.getElementById("name");
-		var myTime = getMyTime();
+            function sendMesg() {
+                var outBox = document.getElementById("outBox");
+                var name = document.getElementById("name");
+                var myTime = getMyTime();
 
-		if (name.value == "")
-		{
-				alert("Please enter your name and login.");
-				return false;
-		}
-		if (!window.websocket)	//not login
-		{
-				alert("Please login first.");
-				return false;
-		}
-		if (outBox.value == "")
-		{
-				alert("No message to send.");
-				return false;
-		}
-		websocket.send(name.value + "[" + myTime + "]" 
-						+ ": " + outBox.value);
-		//reset outBox
-		outBox.value="";
-		return false;
-}
+                if (name.value == "")
+                {
+                    alert("Please enter your name and login.");
+                    return false;
+                }
+                if (!window.websocket)	//not login
+                {
+                    alert("Please login first.");
+                    return false;
+                }
+                if (outBox.value == "")
+                {
+                    alert("No message to send.");
+                    return false;
+                }
+                websocket.send(name.value + "[" + myTime + "]" 
+                + ": " + outBox.value);
+                //reset outBox
+                outBox.value="";
+                return false;
+            }
 
-function clearMesg() {
-		var msgBox = document.getElementById("msgBox");
-		msgBox.value = "";
-		return false;
-}
+            function clearMesg() {
+                var msgBox = document.getElementById("msgBox");
+                msgBox.value = "";
+                return false;
+            }
 
-function keyHit(e) {
-		var keyCode = e.which ? e.which : e.keyCode;
+            function keyHit(e) {
+                var keyCode = e.which ? e.which : e.keyCode;
 
-		if (e.altKey && (keyCode == 13 || keyCode == 108))
-		{
-				sendMesg();
-		}
-		return false;
-}
-</script>
-</head>
-<body bgcolor="#f6e3ce" onkeydown="keyHit(event)">
-<h3>Welcome to Chat Room</h3>
-<textarea id="msgBox" cols="80" rows="30" readonly="true"></textarea>
-<input type="button" id="clear" value="Clear" onclick="clearMesg()"></input>
-<br/>
-<textarea id="outBox" cols="80" rows="5"></textarea>
-<input type="button" id="send" value="Send" title="ALT+ENTER" onclick="sendMesg()"></input>
-<br/>
-<label>Your Name:<input type="text" id="name" size="8"></input></label>
-<input type="button" id="login" value="login" onclick="login()"></input>
-<br/>
+                if (e.altKey && (keyCode == 13 || keyCode == 108))
+                {
+                    sendMesg();
+                }
+                return false;
+            }
+        </script>
+    </head>
+    <body bgcolor="#f6e3ce" onkeydown="keyHit(event)">
+        <h3>Welcome to Chat Room</h3>
+        <textarea id="msgBox" cols="80" rows="30" readonly="true"></textarea>
+        <input type="button" id="clear" value="Clear" onclick="clearMesg()"></input>
+        <br/>
+        <textarea id="outBox" cols="80" rows="5"></textarea>
+        <input type="button" id="send" value="Send" title="ALT+ENTER" onclick="sendMesg()"></input>
+        <br/>
+        <label>Your Name:<input type="text" id="name" size="8"></input></label>
+        <input type="button" id="login" value="login" onclick="login()"></input>
+        <br/>
 
-<div id="output"></div>
-</body>
+        <div id="output"></div>
+    </body>
 </html>
